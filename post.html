@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The IMSP - Nouveau Post</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/logo-imsp.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">The IMSP 🚀</a>
+            <div class="nav-menu">
+                <a href="../index.html" class="nav-link">Accueil</a>
+                <a href="post.html" class="nav-link active">Nouveau Post</a>
+                <a href="#" id="loginBtn">Connexion</a>
+                <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+    <section class="post">
+        <div class="container">
+            <h2>Partage avec The IMSP</h2>
+            <form id="postForm">
+                <textarea id="content" placeholder="Ton message ou recherche..." required></textarea>
+                <input type="file" id="media" accept="image/*,video/*">
+                <button type="submit">Publier 🚀</button>
+            </form>
+        </div>
+    </section>
+    <script type="module" src="../script.js"></script>
+</body>
+</html>
