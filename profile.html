@@ -4,32 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The IMSP - Profil</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="icon" href="../assets/logo-imsp.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/logo-imsp.png" type="image/png">
 </head>
 <body>
     <nav class="navbar">
+        <!-- Identique à index.html -->
         <div class="container">
-            <a href="../index.html" class="logo">The IMSP 🚀</a>
+            <a href="index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>The IMSP</span>
+            </a>
             <div class="nav-menu">
-                <a href="../index.html" class="nav-link">Feed</a>
-                <a href="../post.html" class="nav-link">Nouveau Post</a>
-                <a href="profile.html" class="nav-link active">Profil</a>
-                <a href="../groups.html" class="nav-link">Groupes</a>
-                <a href="../chat.html" class="nav-link">Messages</a>
-                <a href="#" id="loginBtn">Connexion</a>
-                <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+                <a href="groups.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Groupes</span>
+                </a>
+                <a href="chat.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                    <span id="messageBadge" class="badge" style="display:none;">0</span>
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <span id="notificationDot" class="notification-dot" style="display:none;"></span>
+                </a>
+                <a href="profile.html" class="nav-user active" id="userNav" style="display:none;">
+                    <img src="assets/avatar-default.png" alt="Avatar" class="user-avatar" id="userAvatar">
+                    <span id="userName"></span>
+                </a>
+                <a href="#" id="loginBtn" class="nav-link">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Connexion</span>
+                </a>
+                <a href="#" id="logoutBtn" class="nav-link" style="display:none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Déconnexion</span>
+                </a>
             </div>
         </div>
     </nav>
-    <section class="profile">
-        <div class="container">
-            <h2>Mon Profil</h2>
-            <div id="profileInfo"></div>
-            <div id="myPosts"></div>
-            <div id="friendRequests"></div>
+
+    <div class="container">
+        <div class="main-content">
+            <aside class="sidebar">
+                <!-- Identique à index.html -->
+                <ul class="sidebar-menu">
+                    <li class="sidebar-item">
+                        <i class="fas fa-home"></i>
+                        <span>Fil d'actualité</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-hashtag"></i>
+                        <span>Tendances</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span id="sidebarNotificationBadge" class="badge" style="display:none;">0</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Messages</span>
+                        <span id="sidebarMessageBadge" class="badge" style="display:none;">0</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Signets</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-users"></i>
+                        <span>Communautés</span>
+                    </li>
+                    <li class="sidebar-item active">
+                        <i class="fas fa-user"></i>
+                        <span>Profil</span>
+                    </li>
+                    <li class="sidebar-item">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span>Plus</span>
+                    </li>
+                </ul>
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h3 class="card-title">Suggestions</h3>
+                    </div>
+                    <div class="suggestion-list" id="suggestionList"></div>
+                </div>
+            </aside>
+
+            <main class="content-area">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Mon Profil</h2>
+                    </div>
+                    <div id="profileInfo"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Mes Publications</h2>
+                    </div>
+                    <div id="myPosts"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Demandes d'amis</h2>
+                    </div>
+                    <div id="friendRequests"></div>
+                </div>
+            </main>
         </div>
-    </section>
-    <script type="module" src="../script.js"></script>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
