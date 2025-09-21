@@ -240,3 +240,133 @@ function sendFriendRequest(userId) { console.log(`Friend request to ${userId}`);
 
 // Initialisation
 updateUI();
+// Dans script.js, ajouter après loadSuggestions()
+async function loadProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !document.getElementById('profileInfo')) return;
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single();
+    document.getElementById('profileInfo').innerHTML = `
+        <div style="text-align: center;">
+            <img src="${profile.avatar_url || 'assets/avatar-default.png'}" alt="Avatar" class="post-avatar" style="width: 100px; height: 100px;">
+            <h3>${profile.username}</h3>
+            <p>${profile.bio || 'Aucune bio pour le moment.'}</p>
+            <input type="file" id="avatarUpload" accept="image/*">
+            <textarea id="bioInput" placeholder="Mettre à jour ta bio">${profile.bio || ''}</textarea>
+            <button class="post-submit" onclick="updateProfile()">Mettre à jour</button>
+        </div>
+    `;
+    loadUserPosts();
+    loadFriendRequests();
+}
+
+async function updateProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return alert('Connecte-toi !');
+    const bio = document.getElementById('bioInput').value;
+    const file = document.getElementById('avatarUpload')?.files[0];
+    let avatarUrl = null;
+
+    if (file) {
+        const { data, error } = await supabase.storage
+            .from('imsp-media')
+            .upload(`avatars/${session.user.id}/${Date.now()}_${file.name}`, file, { upsert: true });
+        if (error) return alert(`Erreur: ${error.message}`);
+        avatarUrl = supabase.storage.from('imsp-media').getPublicUrl(data.path).data.publicUrl;
+    }
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ bio, avatar_url: avatarUrl || undefined })
+        .eq('user_id', session.user.id);
+    if (error) alert(`Erreur: ${error.message}`);
+    else {
+        alert('Profil mis à jour !');
+        updateUI();
+        loadProfile();
+    }
+}
+
+async function loadUserPosts() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !document.getElementById('myPosts')) return;
+    const { data: posts } = await supabase
+        .from('posts')
+        .select(`
+            id, content, media_url, media_type, created_at,
+            groups(name)
+        `)
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false });
+    document.getElementById('myPosts').innerHTML = posts.map(post => `
+        <div class="post fade-in">
+            <img src="${postAvatar.src}" alt="Avatar" class="post-avatar">
+            <div class="post-content">
+                <div class="post-header">
+                    <span class="post-username">${userName.textContent}</span>
+                    <span class="post-time">${new Date(post.created_at).toLocaleString()}</span>
+                </div>
+                <p class="post-text">${post.content || ''}</p>
+                ${post.media_url ? (post.media_type === 'video' ? 
+                    `<div class="post-media"><video src="${post.media_url}" controls></video></div>` : 
+                    `<div class="post-media"><img src="${post.media_url}" alt="Post"></div>`) : ''}
+                ${post.groups?.name ? `<p class="post-text">Dans ${post.groups.name}</p>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+async function loadFriendRequests() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !document.getElementById('friendRequests')) return;
+    const { data: requests } = await supabase
+        .from('friend_requests')
+        .select(`
+            id, status, created_at,
+            sender:profiles!sender_id(username, avatar_url)
+        `)
+        .eq('receiver_id', session.user.id)
+        .eq('status', 'pending');
+    document.getElementById('friendRequests').innerHTML = requests.map(req => `
+        <div class="suggestion-item">
+            <img src="${req.sender.avatar_url || 'assets/avatar-default.png'}" alt="Avatar" class="user-avatar">
+            <div class="suggestion-info">
+                <h4>${req.sender.username}</h4>
+                <p>Demande reçue le ${new Date(req.created_at).toLocaleString()}</p>
+            </div>
+            <button class="post-submit" onclick="acceptFriendRequest('${req.id}')">Accepter</button>
+            <button class="post-submit" style="background: var(--error);" onclick="rejectFriendRequest('${req.id}')">Refuser</button>
+        </div>
+    `).join('');
+}
+
+async function acceptFriendRequest(requestId) {
+    const { error } = await supabase
+        .from('friend_requests')
+        .update({ status: 'accepted' })
+        .eq('id', requestId);
+    if (error) alert(`Erreur: ${error.message}`);
+    else loadFriendRequests();
+}
+
+async function rejectFriendRequest(requestId) {
+    const { error } = await supabase
+        .from('friend_requests')
+        .update({ status: 'rejected' })
+        .eq('id', requestId);
+    if (error) alert(`Erreur: ${error.message}`);
+    else loadFriendRequests();
+}
+
+async function sendFriendRequest(userId) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return alert('Connecte-toi !');
+    const { error } = await supabase
+        .from('friend_requests')
+        .insert({ sender_id: session.user.id, receiver_id: userId, status: 'pending' });
+    if (error) alert(`Erreur: ${error.message}`);
+    else alert('Demande d\'ami envoyée !');
+}
