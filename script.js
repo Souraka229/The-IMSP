@@ -434,3 +434,71 @@ document.getElementById('groupForm')?.addEventListener('submit', async (e) => {
 document.querySelector('#groupModal .modal-close')?.addEventListener('click', () => {
     document.getElementById('groupModal').style.display = 'none';
 });
+// Dans script.js, ajouter après joinGroup()
+async function loadChats() {
+    if (!document.getElementById('chatSelect')) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        document.getElementById('chatBox').innerHTML = '<p class="post-text">Connecte-toi pour voir tes messages !</p>';
+        return;
+    }
+    const { data: friends } = await supabase
+        .from('friend_requests')
+        .select('receiver_id, sender_id, profiles!receiver_id(username), profiles!sender_id(username)')
+        .eq('status', 'accepted')
+        .or(`sender_id.eq.${session.user.id},receiver_id.eq.${session.user.id}`);
+    const friendIds = friends.map(f => f.sender_id === session.user.id ? f.receiver_id : f.sender_id);
+    const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, username')
+        .in('user_id', friendIds);
+    document.getElementById('chatSelect').innerHTML = '<option value="">Choisis un ami</option>' +
+        profiles.map(p => `<option value="${p.user_id}">${p.username}</option>`).join('');
+
+    document.getElementById('chatSelect').addEventListener('change', loadMessages);
+}
+
+async function loadMessages() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const receiverId = document.getElementById('chatSelect').value;
+    if (!receiverId) return;
+    const { data: messages } = await supabase
+        .from('messages')
+        .select(`
+            id, content, created_at,
+            sender:profiles!sender_id(username, avatar_url),
+            receiver:profiles!receiver_id(username, avatar_url)
+        `)
+        .or(`and(sender_id.eq.${session.user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${session.user.id})`)
+        .order('created_at', { ascending: true });
+    document.getElementById('chatBox').innerHTML = messages.map(msg => `
+        <div class="post fade-in" style="background: ${msg.sender_id === session.user.id ? 'var(--extra-light-gray)' : 'var(--white)'};">
+            <img src="${msg.sender.avatar_url || 'assets/avatar-default.png'}" alt="Avatar" class="post-avatar">
+            <div class="post-content">
+                <div class="post-header">
+                    <span class="post-username">${msg.sender.username}</span>
+                    <span class="post-time">${new Date(msg.created_at).toLocaleString()}</span>
+                </div>
+                <p class="post-text">${msg.content}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+document.getElementById('sendMessage')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return alert('Connecte-toi !');
+    const receiverId = document.getElementById('chatSelect').value;
+    const content = document.getElementById('messageContent').value;
+    if (!receiverId || !content) return alert('Choisis un ami et écris un message !');
+    const { error } = await supabase
+        .from('messages')
+        .insert({ sender_id: session.user.id, receiver_id: receiverId, content });
+    if (error) alert(`Erreur: ${error.message}`);
+    else {
+        document.getElementById('messageContent').value = '';
+        loadMessages();
+    }
+});
