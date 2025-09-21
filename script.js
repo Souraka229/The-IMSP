@@ -502,3 +502,41 @@ document.getElementById('sendMessage')?.addEventListener('click', async (e) => {
         loadMessages();
     }
 });
+// Dans script.js, ajouter après loadMessages()
+async function loadNotifications() {
+    if (!document.getElementById('notificationsList')) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        document.getElementById('notificationsList').innerHTML = '<p class="post-text">Connecte-toi pour voir tes notifications !</p>';
+        return;
+    }
+    const { data: requests } = await supabase
+        .from('friend_requests')
+        .select(`
+            id, created_at,
+            sender:profiles!sender_id(username, avatar_url)
+        `)
+        .eq('receiver_id', session.user.id)
+        .eq('status', 'pending');
+    document.getElementById('notificationsList').innerHTML = requests.map(req => `
+        <div class="post fade-in">
+            <img src="${req.sender.avatar_url || 'assets/avatar-default.png'}" alt="Avatar" class="post-avatar">
+            <div class="post-content">
+                <div class="post-header">
+                    <span class="post-username">${req.sender.username}</span>
+                    <span class="post-time">${new Date(req.created_at).toLocaleString()}</span>
+                </div>
+                <p class="post-text">Vous a envoyé une demande d'ami.</p>
+                <div class="post-actions">
+                    <button class="post-submit" onclick="acceptFriendRequest('${req.id}')">Accepter</button>
+                    <button class="post-submit" style="background: var(--error);" onclick="rejectFriendRequest('${req.id}')">Refuser</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    // Mettre à jour les badges
+    document.getElementById('notificationDot').style.display = requests.length > 0 ? 'block' : 'none';
+    document.getElementById('sidebarNotificationBadge').style.display = requests.length > 0 ? 'block' : 'none';
+    document.getElementById('sidebarNotificationBadge').textContent = requests.length;
+}
