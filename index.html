@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The IMSP - Feed</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/logo-imsp.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">The IMSP 🚀</a>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">Accueil</a>
+                <a href="post.html" class="nav-link">Nouveau Post</a>
+                <a href="#" id="loginBtn">Connexion</a>
+                <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+    <section class="feed">
+        <div class="container">
+            <h2>Bienvenue sur The IMSP</h2>
+            <div id="postsGrid"></div>
+        </div>
+    </section>
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Connexion</h2>
+            <form id="authForm">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Mot de passe" required>
+                <input type="text" id="username" placeholder="Nom d'utilisateur" style="display:none;" required>
+                <button type="submit" id="authButton">Se connecter</button>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
