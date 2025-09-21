@@ -1,22 +1,154 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; line-height: 1.6; background: #f4f4f4; }
-.container { max-width: 900px; margin: 0 auto; padding: 20px; }
-.navbar { background: #3b5998; color: white; padding: 10px 0; }
-.logo { color: white; text-decoration: none; font-size: 1.5em; font-weight: bold; }
-.nav-menu { display: flex; gap: 15px; }
-.nav-link { color: white; text-decoration: none; }
-.nav-link.active, .nav-link:hover { color: #d3d8e8; }
-.feed, .post, .profile, .chat, .groups { padding: 20px 0; }
-.post-card, .group-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background: white; }
-.avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 10px; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-.modal-content { background: white; margin: 10% auto; padding: 20px; width: 70%; max-width: 500px; position: relative; }
-.close { position: absolute; right: 10px; top: 10px; font-size: 24px; cursor: pointer; }
-form { display: flex; flex-direction: column; gap: 10px; }
-input, textarea { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-textarea { height: 100px; }
-button { padding: 10px; background: #3b5998; color: white; border: none; border-radius: 4px; cursor: pointer; }
-button:hover { background: #2e4474; }
-.notification { background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 4px; }
-.chat .sent { text-align: right; background: #e9ecef; }
-.chat .received { text-align: left; background: #d1e7dd; }
+/* style.css */
+:root {
+    --primary: #1DA1F2;
+    --secondary: #14171A;
+    --dark-gray: #657786;
+    --light-gray: #AAB8C2;
+    --extra-light-gray: #E1E8ED;
+    --background: #F5F8FA;
+    --white: #FFFFFF;
+    --success: #17BF63;
+    --error: #E0245E;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--secondary);
+    line-height: 1.6;
+}
+
+/* ... Inclure tout le CSS de index.html ... */
+
+/* Styles supplémentaires pour modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: 15px;
+    width: 100%;
+    max-width: 450px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-form input, .modal-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--extra-light-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.modal-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-form input:focus, .modal-form textarea:focus {
+    border-color: var(--primary);
+}
+
+.modal-form button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-form button:hover {
+    background: #1a91da;
+}
+
+.modal-switch {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--dark-gray);
+}
+
+.modal-switch a {
+    color: var(--primary);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles pour groupes et messages */
+#groupsList .post, #chatBox .post {
+    border-bottom: 1px solid var(--extra-light-gray);
+}
+
+#chatBox {
+    border: 1px solid var(--extra-light-gray);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#chatSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--extra-light-gray);
+    font-size: 1rem;
+}
+
+/* Boutons d'action */
+.follow-btn, .post-submit {
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.follow-btn:hover, .post-submit:hover {
+    background: #1a91da;
+}
