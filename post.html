@@ -12,8 +12,11 @@
         <div class="container">
             <a href="../index.html" class="logo">The IMSP 🚀</a>
             <div class="nav-menu">
-                <a href="../index.html" class="nav-link">Accueil</a>
+                <a href="../index.html" class="nav-link">Feed</a>
                 <a href="post.html" class="nav-link active">Nouveau Post</a>
+                <a href="../profile.html" class="nav-link">Profil</a>
+                <a href="../groups.html" class="nav-link">Groupes</a>
+                <a href="../chat.html" class="nav-link">Messages</a>
                 <a href="#" id="loginBtn">Connexion</a>
                 <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
             </div>
@@ -25,6 +28,10 @@
             <form id="postForm">
                 <textarea id="content" placeholder="Ton message ou recherche..." required></textarea>
                 <input type="file" id="media" accept="image/*,video/*">
+                <select id="groupSelect">
+                    <option value="">Pas de groupe</option>
+                    <!-- Rempli dynamiquement -->
+                </select>
                 <button type="submit">Publier 🚀</button>
             </form>
         </div>
