@@ -370,3 +370,67 @@ async function sendFriendRequest(userId) {
     if (error) alert(`Erreur: ${error.message}`);
     else alert('Demande d\'ami envoyée !');
 }
+// Dans script.js, ajouter après sendFriendRequest()
+async function loadGroupsPage() {
+    if (!document.getElementById('groupsList')) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        document.getElementById('groupsList').innerHTML = '<p class="post-text">Connecte-toi pour voir les groupes !</p>';
+        return;
+    }
+    const { data: groups } = await supabase
+        .from('groups')
+        .select(`
+            id, name, description, created_at,
+            profiles!created_by(username)
+        `)
+        .order('created_at', { ascending: false });
+    document.getElementById('groupsList').innerHTML = groups.map(group => `
+        <div class="post fade-in">
+            <div class="post-content">
+                <div class="post-header">
+                    <span class="post-username">${group.name}</span>
+                    <span class="post-time">Créé par ${group.profiles.username} le ${new Date(group.created_at).toLocaleString()}</span>
+                </div>
+                <p class="post-text">${group.description || 'Aucune description.'}</p>
+                <button class="post-submit" onclick="joinGroup('${group.id}')">Rejoindre</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function joinGroup(groupId) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return alert('Connecte-toi !');
+    const { error } = await supabase
+        .from('group_members')
+        .insert({ group_id: groupId, user_id: session.user.id });
+    if (error) alert(`Erreur: ${error.message}`);
+    else alert('Rejoint le groupe !');
+}
+
+document.getElementById('createGroupBtn')?.addEventListener('click', () => {
+    document.getElementById('groupModal').style.display = 'flex';
+});
+
+document.getElementById('groupForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return alert('Connecte-toi !');
+    const name = document.getElementById('groupName').value;
+    const description = document.getElementById('groupDescription').value;
+    const { error } = await supabase
+        .from('groups')
+        .insert({ name, description, created_by: session.user.id });
+    if (error) alert(`Erreur: ${error.message}`);
+    else {
+        document.getElementById('groupModal').style.display = 'none';
+        document.getElementById('groupForm').reset();
+        loadGroups();
+        loadGroupsPage();
+    }
+});
+
+document.querySelector('#groupModal .modal-close')?.addEventListener('click', () => {
+    document.getElementById('groupModal').style.display = 'none';
+});
