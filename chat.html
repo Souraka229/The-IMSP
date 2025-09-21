@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The IMSP - Messages</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/logo-imsp.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">The IMSP 🚀</a>
+            <div class="nav-menu">
+                <a href="../index.html" class="nav-link">Feed</a>
+                <a href="../post.html" class="nav-link">Nouveau Post</a>
+                <a href="../profile.html" class="nav-link">Profil</a>
+                <a href="../groups.html" class="nav-link">Groupes</a>
+                <a href="chat.html" class="nav-link active">Messages</a>
+                <a href="#" id="loginBtn">Connexion</a>
+                <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+    <section class="chat">
+        <div class="container">
+            <h2>Mes Messages</h2>
+            <select id="chatSelect">
+                <option value="">Choisis un ami</option>
+                <!-- Rempli dynamiquement -->
+            </select>
+            <div id="chatBox"></div>
+            <form id="messageForm">
+                <input type="text" id="messageContent" placeholder="Écris un message..." required>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+    <script type="module" src="../script.js"></script>
+</body>
+</html>
