@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The IMSP - Groupes</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../assets/logo-imsp.png" type="image/png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">The IMSP 🚀</a>
+            <div class="nav-menu">
+                <a href="../index.html" class="nav-link">Feed</a>
+                <a href="../post.html" class="nav-link">Nouveau Post</a>
+                <a href="../profile.html" class="nav-link">Profil</a>
+                <a href="groups.html" class="nav-link active">Groupes</a>
+                <a href="../chat.html" class="nav-link">Messages</a>
+                <a href="#" id="loginBtn">Connexion</a>
+                <a href="#" id="logoutBtn" style="display:none;">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+    <section class="groups">
+        <div class="container">
+            <h2>Groupes IMSP</h2>
+            <button id="createGroupBtn">Créer un groupe</button>
+            <div id="groupsList"></div>
+        </div>
+    </section>
+    <div class="modal" id="groupModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Créer un groupe</h2>
+            <form id="groupForm">
+                <input type="text" id="groupName" placeholder="Nom du groupe" required>
+                <textarea id="groupDescription" placeholder="Description"></textarea>
+                <button type="submit">Créer</button>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="../script.js"></script>
+</body>
+</html>
